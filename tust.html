@@ -1,0 +1,521 @@
+
+
+
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DITSO FACEMASH </title>
+
+
+<style>
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    padding: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+    background: #fafafa;
+    color: #222;
+    user-select: none;
+  }
+  #powered {
+    position: fixed;
+    top: 12px;
+    right: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    letter-spacing: 0.06em;
+    opacity: 0.7;
+  }
+  header {
+    padding: 60px 20px 30px;
+    text-align: center;
+  }
+  header h1 {
+    margin: 0;
+    font-weight: 900;
+    font-size: 3.5rem;
+    letter-spacing: 0.12em;
+    color: #202020;
+    text-transform: uppercase;
+  }
+  header h2 {
+    margin: 8px 0 0;
+    font-weight: 700;
+    font-size: 1.7rem;
+    color: #555;
+    font-style: italic;
+    letter-spacing: 0.08em;
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    gap: 50px;
+    margin: 40px 20px;
+    flex-wrap: wrap;
+  }
+  .face {
+    background: white;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    width: 230px;
+    box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+    transition: border-color 0.2s ease;
+    cursor: pointer;
+  }
+  .face:hover {
+    border-color: #4267b2;
+  }
+  .face img {
+    width: 100%;
+    height: 230px;
+    object-fit: cover;
+    border-radius: 6px 6px 0 0;
+  }
+  .face h3 {
+    margin: 12px 0 8px;
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: #111;
+  }
+  .face button {
+    margin-bottom: 15px;
+    background: #4267b2;
+    border: none;
+    color: white;
+    padding: 10px 0;
+    width: 100%;
+    font-size: 1.1rem;
+    font-weight: 700;
+    border-radius: 0 0 8px 8px;
+    letter-spacing: 0.05em;
+    transition: background 0.3s ease;
+  }
+  .face button:hover {
+    background: #365899;
+  }
+  #leaderboard {
+    max-width: 420px;
+    margin: 30px auto 50px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+    padding: 20px 25px;
+    font-weight: 600;
+    color: #222;
+    letter-spacing: 0.05em;
+  }
+  #leaderboard h3 {
+    margin: 0 0 18px;
+    font-weight: 900;
+    font-size: 1.6rem;
+    letter-spacing: 0.1em;
+    text-align: center;
+  }
+  #leaderboard div {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+    font-size: 1.1rem;
+  }
+  #leaderboard div:last-child {
+    border-bottom: none;
+  }
+  .admin {
+    max-width: 480px;
+    background: white;
+    margin: 0 auto 50px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgb(0 0 0 / 0.1);
+    padding: 25px 30px;
+  }
+  .admin h3 {
+    margin-top: 0;
+    font-weight: 900;
+    font-size: 1.8rem;
+    letter-spacing: 0.1em;
+    margin-bottom: 15px;
+    text-align: center;
+  }
+  .admin input[type="password"], .admin input[type="text"], .admin input[type="file"] {
+    width: 100%;
+    font-size: 1rem;
+    padding: 12px 10px;
+    margin-bottom: 15px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+    transition: border-color 0.25s ease;
+  }
+  .admin input:focus {
+    outline: none;
+    border-color: #4267b2;
+  }
+  .admin button {
+    width: 100%;
+    font-weight: 700;
+    font-size: 1.1rem;
+    background: #4267b2;
+    color: white;
+    border: none;
+    padding: 12px 0;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .admin button:hover {
+    background: #365899;
+  }
+  .admin button.resetAll {
+    background: #dc3545;
+    margin-top: 12px;
+  }
+  .admin button.resetAll:hover {
+    background: #a71d2a;
+  }
+  .hidden { display: none; }
+  .nav-buttons {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .nav-buttons button {
+    background: #888;
+    color: white;
+    font-weight: bold;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+  }
+  .nav-buttons button:hover {
+    background: #444;
+  }
+  @media (max-width: 580px) {
+    .container {
+      flex-direction: column;
+      gap: 30px;
+      align-items: center;
+    }
+    .face {
+      width: 90vw;
+      max-width: 320px;
+    }
+  }
+</style>
+<button onclick="showRules()" style="display:block; margin: 30px auto; padding: 10px 20px; background:#444; color:white; font-weight:700; border:none; border-radius:6px;">Rules & Privacy</button>
+
+<div id="rulesModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:1000;">
+  <div style="background:white; max-width:600px; margin:100px auto; padding:25px 30px; border-radius:10px; position:relative;">
+    <h2 style="margin-top:0;">Rules & Privacy Policy</h2>
+    <p><strong>DITSO Facemash</strong> ni app ya mashindano ya kijanja ili kuburudisha wanafunzi wa DIT Mwanza Campus kwa kuangalia nani "wa moto zaidi" kwa wiki au mwezi.</p>
+    <p><strong>Picha</strong> zinazopakiwa ni kwa ridhaa ya washiriki wenyewe. Hatupokei wala kuchapisha picha zilizopatikana bila idhini ya mhusika.</p>
+    <p>Data kama kura na matokeo hazitumiwi kwa madhumuni ya kibiashara wala kutangaza watu bila idhini yao.</p>
+    <p><strong>Washindi</strong> wanaopata kura nyingi hupokea zawadi kutoka kwa TMG Digital kulingana na promosheni husika.</p>
+    <p>Tunazingatia <strong>faragha</strong>, <strong>heshima</strong> na <strong>burudani</strong> pekee. Kama kuna malalamiko, tafadhali wasiliana na admin kupitia app.</p>
+    <p style="margin-top: 20px;">App hii imetengenezwa na <strong>Trust Erastus</strong>, mwanafunzi wa DIT Mwanza na mwanzilishi wa TMG DIGtech.</p>
+    <button onclick="closeRules()" style="margin-top:20px; background:#dc3545; color:white; font-weight:700; border:none; padding:10px 20px; border-radius:6px;">Funga</button>
+  </div>
+</div>
+
+</head>
+<body>
+
+  <!-- Add this inside <body>, baada ya vitu vingine -->
+<button id="aboutBtn" style="position: fixed; bottom: 15px; right: 15px; background: #4267b2; color: white; border: none; padding: 12px 18px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 1rem; box-shadow: 0 4px 8px rgb(0 0 0 / 0.2); z-index: 1000;">
+  About Us
+</button>
+
+<!-- Modal -->
+<div id="aboutModal" style="display:none; position: fixed; z-index: 1100; left: 0; top: 0; width: 100vw; height: 100vh; overflow: auto; background-color: rgba(0,0,0,0.6);">
+  <div style="background: white; margin: 10% auto; padding: 20px 30px; border-radius: 10px; max-width: 500px; position: relative; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; box-shadow: 0 6px 20px rgb(0 0 0 / 0.3);">
+    <h2 style="text-align: center; font-weight: 900; margin-bottom: 15px;">About DITSO FACEMASH</h2>
+    <p>
+      DITSO FACEMASH ni jukwaa la kipekee lililoundwa kwa ajili ya wanafunzi wa DIT Campus Mwanza kujiburudisha na kujionea nani ana mvuto zaidi au ni "moto" chuoni.
+    </p>
+    <p>
+      Mradi huu umeanzishwa na <strong>Trust Erastus</strong>, mwanafunzi wa DIT Campus Mwanza na founder wa TMG DIGtech.
+    </p>
+    <p>
+      Lengo ni kuongeza mshikamano, burudani, na mshindani wa kirafiki kati ya wanafunzi.
+    </p>
+    <p>
+      Usisahau kushiriki, kupiga kura, na kushindana kwa joto! Zawadi zitatolewa kwa washindi wa wiki na mwezi.
+    </p>
+    <button id="closeAbout" style="position: absolute; top: 10px; right: 15px; background: #dc3545; color: white; border: none; padding: 5px 12px; border-radius: 5px; cursor: pointer; font-weight: 700;">X</button>
+  </div>
+</div>
+
+<script>
+  const aboutBtn = document.getElementById('aboutBtn');
+  const aboutModal = document.getElementById('aboutModal');
+  const closeAbout = document.getElementById('closeAbout');
+
+  aboutBtn.addEventListener('click', () => {
+    aboutModal.style.display = 'block';
+  });
+
+  closeAbout.addEventListener('click', () => {
+    aboutModal.style.display = 'none';
+  });
+
+  window.addEventListener('click', (event) => {
+    if (event.target === aboutModal) {
+      aboutModal.style.display = 'none';
+    }
+  });
+</script>
+
+
+<div id="powered"><a href="https://www.instagram.com/tmg_digital_tech?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==">
+  Powered by TMG DIGtech</a></div>
+<header>
+  <h1>DITSO FACEMASH</h1>
+  <h2>NANI WA MOTO?</h2>
+</header>
+<div class="container" id="votingArea">
+  <p>Hakuna picha za kutosha. Admin tafadhali pakia picha na majina.</p>
+</div>
+<div class="nav-buttons hidden" id="navButtons">
+  <button onclick="showPrevious()">Previous</button>
+  <button onclick="showNext()">Next</button>
+</div>
+<div id="leaderboard" class="hidden"></div>
+
+
+<div class="student-upload" style="max-width: 480px; margin: 40px auto; background: white; padding: 25px 30px; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <h3 style="text-align:center;">Tuma Picha Yako</h3>
+  <p style="font-size: 14px; color: #555;">Unaruhusiwa kutuma picha yako kwa hiari ili ushiriki kwenye DITSO Facemash. Tafadhali jaza taarifa zako kisha pakia picha.</p>
+  <input type="text" id="studentName" placeholder="Jina Kamili" style="width:100%; padding:10px; margin:10px 0; border:1px solid #ccc; border-radius:6px;" />
+  <input type="file" id="studentImage" accept="image/*" style="width:100%; padding:10px; margin:10px 0;"/>
+  <label style="font-size: 14px; display: block; margin: 10px 0;">
+    <input type="checkbox" id="studentConsent" />
+    Ninakubali <a href="#" onclick="showRules()" style="color:#4267b2;">Terms & Privacy</a> na ninatoa idhini ya picha yangu kutumika kwenye app hii.
+  </label>
+  <button onclick="submitStudentImage()" style="width:100%; padding:12px; font-weight:bold; background:#4267b2; color:white; border:none; border-radius:6px; font-size:16px;">Tuma Picha</button>
+</div>
+
+
+<div class="admin">
+  <h3>Admin Login</h3>
+  <input type="password" id="adminPass" placeholder="Ingiza password ya admin" />
+  <button onclick="checkAdmin()">INGIA</button>
+  <div id="adminControls" class="hidden">
+    <h4>Upload Picha Mpya</h4>
+    <input type="file" id="imageUpload" accept="image/*" />
+    <input type="text" id="imageName" placeholder="Jina la mwanafunzi" />
+    <button onclick="addNewImage()">Weka Picha</button>
+    <hr style="margin: 20px 0;" />
+    <button onclick="resetVotes()">Futa Kura Zote (Reset Leaderboard)</button>
+    <button onclick="resetAll()" class="resetAll">Futa Picha Zote na Kura Zote</button>
+  </div>
+</div>
+
+
+<script>
+let data = [];
+
+function saveData() {
+  localStorage.setItem('facemashData', JSON.stringify(data));
+}
+
+function loadData() {
+  const saved = localStorage.getItem('facemashData');
+  if (saved) data = JSON.parse(saved);
+}
+
+function renderFaces() {
+  const area = document.getElementById('votingArea');
+  if (data.length < 2) {
+    area.innerHTML = '<p>Hakuna picha za kutosha. Tafadhali admin pakia picha na majina.</p>';
+    hideLeaderboard();
+    document.getElementById('navButtons').classList.add('hidden');
+    return;
+  }
+  area.innerHTML = '';
+  // Show first two pictures to start
+  currentIndex = 0;
+  showPair(currentIndex);
+  document.getElementById('navButtons').classList.remove('hidden');
+  renderLeaderboard();
+}
+
+let currentIndex = 0;
+
+function showPair(index) {
+  const area = document.getElementById('votingArea');
+  area.innerHTML = '';
+  if (data.length < 2) return;
+
+  // Make sure index stays within bounds for pairs
+  if (index < 0) currentIndex = data.length - 2;
+  else if (index > data.length - 2) currentIndex = 0;
+  else currentIndex = index;
+
+  const i = currentIndex;
+  const j = currentIndex + 1;
+
+  [i, j].forEach(idx => {
+    const face = document.createElement('div');
+    face.className = 'face';
+    face.innerHTML = `
+      <img src="${data[idx].img}" alt="${data[idx].name}" />
+      <h3>${data[idx].name}</h3>
+      <button onclick="vote(${idx})" ${data[idx].voted ? 'disabled' : ''}>Mpigie Kura</button>
+    `;
+    area.appendChild(face);
+  });
+}
+
+function showNext() {
+  showPair(currentIndex + 1);
+}
+
+function showPrevious() {
+  showPair(currentIndex - 1);
+}
+
+function checkAdmin() {
+  const passInput = document.getElementById('adminPass');
+  const pass = passInput.value;
+  if (pass === '1234') {
+    document.getElementById('adminControls').classList.remove('hidden');
+    alert('Umeingia kama Admin');
+    passInput.value = '';
+  } else {
+    alert('Password sio sahihi');
+    document.getElementById('adminControls').classList.add('hidden');
+  }
+}
+
+
+function vote(index) {
+  if(data[index].voted) {
+    alert('Umeshapiga kura kwa huyu tayari!');
+    return;
+  }
+  data[index].votes++;
+  data[index].voted = true; // Mark that user has voted this picture
+  saveData();
+  renderLeaderboard();
+  alert(`Umeweza kumpigia kura ${data[index].name}!`);
+  showNext();
+}
+
+function renderLeaderboard() {
+  const leaderboard = document.getElementById('leaderboard');
+  if (data.length === 0) {
+    hideLeaderboard();
+    return;
+  }
+  leaderboard.classList.remove('hidden');
+  leaderboard.innerHTML = '<h3>Leaderboard - Wanafunzi Wenye Kura Zaidi</h3>';
+  const sorted = [...data].sort((a, b) => b.votes - a.votes);
+  sorted.forEach((d, i) => {
+    const div = document.createElement('div');
+    div.textContent = `${i + 1}. ${d.name} - Kura: ${d.votes}`;
+    leaderboard.appendChild(div);
+  });
+}
+
+function hideLeaderboard() {
+  const leaderboard = document.getElementById('leaderboard');
+  leaderboard.classList.add('hidden');
+  leaderboard.innerHTML = '';
+}
+
+function resetVotes() {
+  if (!confirm('Unataka kufuta kura zote?')) return;
+  data.forEach(d => {
+    d.votes = 0;
+    d.voted = false;
+  });
+  saveData();
+  renderFaces();
+  alert('Kura zote zimefutwa!');
+}
+
+function resetAll() {
+  if (!confirm('Una uhakika unataka kufuta picha zote na kura zote? Hii haiwezi kurejeshwa!')) return;
+  data = [];
+  saveData();
+  renderFaces();
+  alert('Picha zote na kura zote zimefutwa!');
+}
+
+function addNewImage() {
+  const name = document.getElementById('imageName').value.trim();
+  const fileInput = document.getElementById('imageUpload');
+  const file = fileInput.files[0];
+
+  if (!name || !file) {
+    alert('Tafadhali jaza jina na chagua picha.');
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    data.push({name: name, img: e.target.result, votes: 0, voted: false});
+    saveData();
+    renderFaces();
+    alert('Picha imeongezwa!');
+    document.getElementById('imageName').value = '';
+    fileInput.value = '';
+  };
+  reader.readAsDataURL(file);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadData();
+  renderFaces();
+});
+
+</script>
+
+<script>
+  function showRules() {
+    document.getElementById('rulesModal').style.display = 'block';
+  }
+  function closeRules() {
+    document.getElementById('rulesModal').style.display = 'none';
+  }
+
+  function submitStudentImage() {
+  const name = document.getElementById('studentName').value.trim();
+  const fileInput = document.getElementById('studentImage');
+  const file = fileInput.files[0];
+  const consent = document.getElementById('studentConsent').checked;
+
+  if (!name || !file) {
+    alert("Tafadhali jaza jina na chagua picha.");
+    return;
+  }
+
+  if (!consent) {
+    alert("Lazima ukubali Terms & Privacy ili kuendelea.");
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    data.push({ name: name, img: e.target.result, votes: 0 });
+    saveData();
+    renderFaces();
+    alert("Picha yako imewasilishwa! Asante kwa kushiriki.");
+    document.getElementById('studentName').value = '';
+    document.getElementById('studentImage').value = '';
+    document.getElementById('studentConsent').checked = false;
+  };
+  reader.readAsDataURL(file);
+}
+
+
+
+  </script>
+
+  
+  
+</body>
+</html>
